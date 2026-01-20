@@ -3,10 +3,11 @@
 module DataFrame.Column where
 
 -- | Column space with a closed type universe.
-data Column = CInt [(Int, Int)]
-            | CDouble [(Int, Double)]
-            | CString [(Int, String)]
-            | CBool [(Int, Bool)]
+data Column
+    = CInt [(Int, Int)]
+    | CDouble [(Int, Double)]
+    | CString [(Int, String)]
+    | CBool [(Int, Bool)]
 
 columnType :: Column -> String
 columnType (CInt _) = "Int"
@@ -21,12 +22,13 @@ instance Show Column where
     show (CBool xs) = show (map snd xs)
 
 class Columnable a where
-  toColumn :: [(Int, a)] -> Column
-  fromColumn :: Column -> [(Int, a)]
-  unary :: (Columnable b) => (b -> a) -> Column -> Column
-  -- TODO: Implementations should align columns.
-  -- Right now we assume columns are the same.
-  binary :: (Columnable b, Columnable c) => (c -> b -> a) -> Column -> Column -> Column
+    toColumn :: [(Int, a)] -> Column
+    fromColumn :: Column -> [(Int, a)]
+    unary :: (Columnable b) => (b -> a) -> Column -> Column
+
+    -- TODO: Implementations should align columns.
+    -- Right now we assume columns are the same.
+    binary :: (Columnable b, Columnable c) => (c -> b -> a) -> Column -> Column -> Column
 
 instance Columnable Int where
     toColumn = CInt
@@ -52,8 +54,8 @@ instance Columnable Bool where
     unary f c = toColumn (map (\(i, v) -> (i, f v)) (fromColumn c))
     binary f x y = toColumn (zipWith (\(i, v) (i', v') -> (i, f v v')) (fromColumn x) (fromColumn y))
 
-fromList :: Columnable a => [a] -> Column
-fromList xs = toColumn (zip [0..] xs)
+fromList :: (Columnable a) => [a] -> Column
+fromList xs = toColumn (zip [0 ..] xs)
 
 atIndicies :: [Int] -> Column -> Column
 atIndicies ixs (CInt xs) = CInt (filter ((`elem` ixs) . fst) xs)

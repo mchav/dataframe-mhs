@@ -59,7 +59,8 @@ library
     import:           warnings
 
     -- Modules exported by the library.
-    exposed-modules:  DataFrame.Column
+    exposed-modules:  DataFrame
+                   ,  DataFrame.Column
                    ,  DataFrame.Core
                    ,  DataFrame.Expression
                    ,  DataFrame.Functions

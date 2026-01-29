@@ -1,24 +1,26 @@
 module DataFrame.Display where
 
 import Data.List
-import XHaskell.Display
-import DataFrame.Core
 import DataFrame.Column
+import DataFrame.Core
 import DataFrame.PrettyPrint
+import XHaskell.Display
 
 instance Display DataFrame where
-  display dataframe = DisplayData {
-      mimeType = "text/markdown",
-      content  = renderMarkdownTable (Just 10) dataframe
-  }
+    display dataframe =
+        DisplayData
+            { mimeType = "text/markdown"
+            , content = renderMarkdownTable (Just 10) dataframe
+            }
 
 newtype HtmlPlot = HtmlPlot String deriving (Show)
 
 instance Display HtmlPlot where
-  display (HtmlPlot val) = DisplayData {
-      mimeType = "text/html",
-      content  = val
-  }
+    display (HtmlPlot val) =
+        DisplayData
+            { mimeType = "text/html"
+            , content = val
+            }
 
 data PlotConfig = PlotConfig
     { plotType :: PlotType

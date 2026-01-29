@@ -10,6 +10,9 @@ import DataFrame.Expression
 geq :: (Ord a, Columnable a) => Expr a -> Expr a -> Expr Bool
 geq = BinaryOp (>=)
 
+(.>=) :: (Ord a, Columnable a) => Expr a -> Expr a -> Expr Bool
+(.>=) = geq
+
 instance (Columnable a, Num a) => Num (Expr a) where
     (+) = BinaryOp (+)
     (*) = BinaryOp (+)
@@ -33,3 +36,6 @@ filterWhere expr df = case interpret expr df of
 
 derive :: (Columnable a) => String -> Expr a -> DataFrame -> DataFrame
 derive name expr df = DataFrame ((columns df) ++ [(name, interpret expr df)])
+
+select :: [String] -> DataFrame -> DataFrame
+select cols df = df{columns = filter ((`elem` cols) . fst) (columns df)}

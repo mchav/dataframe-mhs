@@ -1,8 +1,10 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Main (main) where
 
 import Control.Monad
 
-import DataFrame ((|>))
+import DataFrame ((.>=), (|>))
 import qualified DataFrame as D
 
 main :: IO ()
@@ -17,18 +19,19 @@ main = do
                 ]
 
     -- Typed column references
-    let high = D.Col "High Temperature (Celcius)" :: D.Expr Double
-    let low = D.Col "Low Temperature (Celcius)" :: D.Expr Double
+    let high = D.Col @Double "High Temperature (Celcius)"
+    let low = D.Col @Double "Low Temperature (Celcius)"
 
     -- Some expressions.
     let hotDays =
             df
-                |> D.filterWhere (high `D.geq` 25)
+                |> D.filterWhere (high .>= 25)
                 |> D.derive "high_fahrenheit" (toFahrenheit high)
                 |> D.derive "low_fahrenheit" (toFahrenheit low)
-                |> D.derive "average (celsius)" ((high + low) / 2)
+                |> D.derive "average (fahrenheit)" ((high + low) / 2)
+                |> D.select ["Day", "average (fahrenheit)"]
     putStrLn ""
-    putStrLn (D.renderMarkdownTable (Just 10) hotDays)
+    putStrLn (D.renderMarkdownTable Nothing hotDays)
 
 toFahrenheit :: D.Expr Double -> D.Expr Double
 toFahrenheit t = (t * (9 / 5)) + 2

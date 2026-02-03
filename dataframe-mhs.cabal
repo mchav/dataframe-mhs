@@ -64,6 +64,7 @@ library
                    ,  DataFrame.Core
                    ,  DataFrame.Expression
                    ,  DataFrame.Functions
+                   ,  DataFrame.Permutation
                    ,  DataFrame.PrettyPrint
 
     -- Modules included in this library but not exported.

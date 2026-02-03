@@ -39,3 +39,6 @@ derive name expr df = DataFrame ((columns df) ++ [(name, interpret expr df)])
 
 select :: [String] -> DataFrame -> DataFrame
 select cols df = df{columns = filter ((`elem` cols) . fst) (columns df)}
+
+selectColumn :: String -> DataFrame -> Column
+selectColumn colname (DataFrame d) = snd $ head $ filter (\x -> fst x == colname) d

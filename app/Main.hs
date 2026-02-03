@@ -7,8 +7,8 @@ import qualified DataFrame as D
 
 main :: IO ()
 main = do
-    let highs = [(24 :: Double), 20, 22, 23, 25, 26, 26]
-    let lows = [(14 :: Double), 13, 13, 13, 14, 15, 15]
+    let highs = [(24 :: Double), 20, 22, 23, 25, 26, 26, 20.2, 20.8, 25.2]
+    let lows = [(14 :: Double), 13, 13, 13, 14, 15, 15, 12.1, 12.2, 12.5]
     let df =
             D.fromNamedColumns
                 [ ("Day", D.fromList (take (length highs) (cycle ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])))
@@ -30,6 +30,8 @@ main = do
                 |> D.select ["Day", "average (fahrenheit)"]
     putStrLn ""
     putStrLn (D.renderMarkdownTable Nothing hotDays)
+    putStrLn $ show (hotDays |> D.sortBy (D.Asc "average (fahrenheit)"))
+    putStrLn $ show (hotDays |> D.sortBy (D.Desc "average (fahrenheit)"))
 
 toFahrenheit :: D.Expr Double -> D.Expr Double
 toFahrenheit t = (t * (9 / 5)) + 2
